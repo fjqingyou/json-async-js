@@ -59,7 +59,7 @@ async function doTest() {
             }
         ]
     };
-    let jsonStr = await JsonAsync.stringify(obj1)
+    let jsonStr = await JsonAsync.stringify(obj1, undefined, 4)
     let res = await JsonAsync.parse(jsonStr)
     console.log("res", JSON.stringify(res));
 

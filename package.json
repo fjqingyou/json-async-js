@@ -1,6 +1,6 @@
 {
   "name": "json-async-js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "json async parse and stringify",
   "main": "index.js",
   "scripts": {
