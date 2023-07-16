@@ -11,20 +11,19 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
     async function parseValue(): Promise<any> {
         let result = null;
-        const char = text[index];
-
         jumpEmpty();
 
+        const char = text[index];
         if (char === '{') {
-            result = parseObject();
+            result = await parseObject();
         } else if (char === '[') {
-            result = parseArray();
+            result = await parseArray();
         } else if (char === '"') {
-            result = parseString();
+            result = await parseString();
         } else if (char === '-' || !isNaN(Number(char))) {
-            result = parseNumber();
+            result = await parseNumber();
         } else if (char === 't' || char === 'f' || char === 'n') {
-            result = parseBooleanOrNull();
+            result = await parseBooleanOrNull();
         }
 
         jumpEmpty();
@@ -39,6 +38,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         index++;
 
         while (text[index] !== '}') {
+            jumpEmpty();
+
             const key = await parseString();
 
             jumpEmpty();
@@ -66,8 +67,12 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
             }
         }
 
+        jumpEmpty();
+
         // jump '}'
         index++;
+
+        jumpEmpty();
 
         return obj;
     }
@@ -77,6 +82,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
         // jump '['
         index++;
+
+        jumpEmpty();
 
         while (text[index] !== ']') {
             jumpEmpty();
@@ -101,8 +108,12 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
             }
         }
 
+        jumpEmpty();
+
         // jump ']'
         index++;
+
+        jumpEmpty();
 
         return arr;
     }
