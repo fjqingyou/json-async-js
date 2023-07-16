@@ -1,5 +1,5 @@
-import { parse } from "./parse";
-import { stringify } from "./stringify";
+import { parse } from "./lib/parse";
+import { stringify } from "./lib/stringify";
 
 export const JsonAsyncJs = {
     parse,
