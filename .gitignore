@@ -1,0 +1,17 @@
+#OS
+.DS_Store
+
+# IDE
+.vscode/
+
+# Env
+yarn-error*.log
+
+# project
+export/
+dict/
+local/
+node_modules/
+
+# 软链接
+logs

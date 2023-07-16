@@ -1,0 +1,23 @@
+{
+  "name": "json-async-js",
+  "version": "1.0.0",
+  "description": "json async parse and stringify",
+  "main": "dict/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fjqingyou/json-async-js.git"
+  },
+  "keywords": [
+    "json",
+    "async"
+  ],
+  "author": "fjqingyou <fjqingyou@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fjqingyou/json-async-js/issues"
+  },
+  "homepage": "https://github.com/fjqingyou/json-asynci-js#readme"
+}

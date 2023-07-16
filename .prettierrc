@@ -1,0 +1,14 @@
+{
+    "printWidth": 300,
+    "proseWrap": "never",
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "bracketLine": true,
+    "endOfLine": "lf",
+    "htmlWhitespaceSensitivity": "strict",
+    "jsxBracketSameLine": true,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "quoteProps": "as-needed",
+    "semi": true
+}
