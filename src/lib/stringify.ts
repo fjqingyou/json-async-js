@@ -35,7 +35,7 @@ export async function stringify(value: any, replacer?: ((this: any, key: string,
                 spaceInfo.template = space;
             }
 
-            spaceInfo.text = "\r\n";
+            spaceInfo.text = "\n";// JSON.stringify(xxx, undefined, 4); is lf not crlf
         }
 
         result = "" + await stringifyItem(value, replacer || null, spaceInfo);
