@@ -35,7 +35,7 @@ export async function stringify(value: any, replacer?: ((this: any, key: string,
                 spaceInfo.template = space;
             }
 
-            spaceInfo.text = "\n";
+            spaceInfo.text = "\r\n";
         }
 
         result = "" + await stringifyItem(value, replacer || null, spaceInfo);
