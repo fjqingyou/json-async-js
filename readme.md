@@ -26,7 +26,7 @@ yarn add json-async-js --save
 
 //import for js if you use .js
 const fs = require("fs");
-const JsonAsync = require("../../dict/index").default;
+const JsonAsync = require("json-async-js").default;
 
 //import for typescript if you use typescript
 import JsonAsync from "json-async-js";
