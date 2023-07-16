@@ -69,8 +69,6 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
             }
         }
 
-        jumpEmpty();
-
         // jump '}'
         index++;
 
@@ -104,16 +102,14 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
             }
         }
 
+        // jump ']'
+        index++;
+
         if (reviver) {
             for (let i = 0; i < arr.length; i++) {
                 arr[i] = await reviver.call(arr, "" + i, arr[i]);
             }
         }
-
-        jumpEmpty();
-
-        // jump ']'
-        index++;
 
         jumpEmpty();
 
@@ -139,14 +135,19 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
     }
 
     async function parseNumber(): Promise<number> {
-        let numStr = '';
+        let indexStart = index;
+        for (; ;) {
+            let code = text[index].charCodeAt(0);
+            if (code < 48 || code > 57) {
+                break;
+            }
 
-        while (!isNaN(Number(text[index]))) {
-            numStr += text[index];
             index++;
         }
+        let indexEnd = index;
 
-        return Number(numStr);
+        let str = text.substring(indexStart, indexEnd);
+        return Number(str);
     }
 
     async function parseBooleanOrNull(): Promise<boolean | null> {
