@@ -1,11 +1,12 @@
 # json async
 
-Function for asynchronous parsing and serialization of JSON.
+English | [简体中文](./readme-cn.md)
 
+Function for asynchronous parsing and serialization of JSON.
 
 ## test
 ``` js
-import JsonAsync from "JsonAsyncJs";
+import JsonAsync from "json-async-js";
 
 async function doTest() {
     let obj1 = {

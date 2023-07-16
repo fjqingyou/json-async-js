@@ -1,10 +1,12 @@
 # 异步 JSON
 
+[English](./readme.md) | 简体中文
+
 用于异步解析和序列化 JSON 的功能。
 
 ## test
 ``` js
-import JsonAsync from "JsonAsyncJs";
+import JsonAsync from "json-async-js";
 
 async function doTest() {
     let obj1 = {
