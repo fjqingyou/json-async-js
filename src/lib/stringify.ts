@@ -58,7 +58,8 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
     }
 
     if (typeof value == "string") {
-        return `"${value}"`;
+        // use JSON.stringify do string, for example \" or \' or other
+        return JSON.stringify(value);
     }
 
     let toJSON = value.toJSON as (() => string) | undefined;

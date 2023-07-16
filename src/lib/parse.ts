@@ -37,6 +37,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         // jump '{'
         index++;
 
+        jumpEmpty();
+
         while (text[index] !== '}') {
             jumpEmpty();
 
@@ -119,19 +121,21 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
     }
 
     async function parseString(): Promise<string> {
-        let str = '';
         // jump '"'
         index++;
 
-        while (text[index] !== '"') {
-            str += text[index];
+        let indexStart = index;
+
+        while (!(text[index] === '"' && text[index - 1] !== '\\')) {
             index++;
         }
 
+        let indexEnd = index;
+
         // jump '"'
         index++;
 
-        return str;
+        return text.substring(indexStart, indexEnd);
     }
 
     async function parseNumber(): Promise<number> {

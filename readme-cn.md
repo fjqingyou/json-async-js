@@ -23,11 +23,17 @@ yarn add json-async-js --save
 
 ## 测试
 ``` js
+
+//import for js if you use .js
+const fs = require("fs");
+const JsonAsync = require("../../dict/index").default;
+
+//import for typescript if you use typescript
 import JsonAsync from "json-async-js";
 
 async function doTest() {
     let obj1 = {
-        a: "1",
+        a: "1\"2",
         b: 2,
         c: true,
         d: null,
