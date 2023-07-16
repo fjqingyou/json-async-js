@@ -10,6 +10,17 @@
 
 虽然能解决一次性占用大量 CPU 时间资源的问题，但是问题将转变为解析和序列化任务的时间分散到各个不同时间上执行。客观来说完成总任务的时间会变得更长
 
+## 安装
+请在下方的 npm 或者是 yarn 根据您的习惯选取其中一个执行即可
+
+```
+# npm
+npm install json-async-js --save
+
+# yarn
+yarn add json-async-js --save
+```
+
 ## 测试
 ``` js
 import JsonAsync from "json-async-js";

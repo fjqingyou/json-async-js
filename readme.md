@@ -10,6 +10,17 @@ The implementation idea of this library is to disperse the task of parsing and s
 
 Although it can solve the problem of occupying a large amount of CPU time resources at once, the problem will shift to the time of parsing and serialization tasks being dispersed across different times for execution. Objectively speaking, the time to complete the overall task will become longer
 
+## install
+Please select one of the NPM or Yarn options below to execute according to your preference
+
+```
+# npm
+npm install json-async-js --save
+
+# yarn
+yarn add json-async-js --save
+```
+
 ## test
 ``` js
 import JsonAsync from "json-async-js";
