@@ -131,7 +131,11 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         // jump '"'
         index++;
 
-        return text.substring(indexStart, indexEnd);
+        // crop string content
+        let str = text.substring(indexStart, indexEnd);
+
+        // handling Escape character
+        return unescapeAll(str);
     }
 
     async function parseNumber(): Promise<number> {
@@ -176,6 +180,24 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
             index++;
         }
+    }
+
+    function unescapeAll(str: string) {
+        return str.replace(/\\(u[0-9a-fA-F]{4}|.)/g, function (match, char) {
+            if (char.charAt(0) === 'u') {
+                return String.fromCharCode(parseInt(char.substr(1), 16));
+            } else {
+                switch (char) {
+                    case 'n': return '\n';
+                    case 'r': return '\r';
+                    case 't': return '\t';
+                    case '\'': return '\'';
+                    case '\"': return '\"';
+                    case '\\': return '\\';
+                    default: return match;
+                }
+            }
+        });
     }
 
     return parseValue();

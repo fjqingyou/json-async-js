@@ -10,9 +10,6 @@ The implementation idea of this library is to disperse the task of parsing and s
 
 Although it can solve the problem of occupying a large amount of CPU time resources at once, the problem will shift to the time of parsing and serialization tasks being dispersed across different times for execution. Objectively speaking, the time to complete the overall task will become longer
 
-# bug
-now parse has bug, \" \t or other escape character not support, We will provide support for this in the future
-
 ## install
 Please select one of the NPM or Yarn options below to execute according to your preference
 
@@ -28,14 +25,16 @@ yarn add json-async-js --save
 ``` js
 
 //import for js if you use .js
+// const fs = require("fs");
 const JsonAsync = require("json-async-js");
 
 //import for typescript if you use typescript
-import JsonAsync from "json-async-js";
+// import fs from "fs";
+// import JsonAsync from "json-async-js";
 
 async function doTest() {
     let obj1 = {
-        a: "1\"2",
+        a: "1\r\n\t\'\"\\2\u4F60\u597D",
         b: 2,
         c: true,
         d: null,
@@ -78,9 +77,26 @@ async function doTest() {
             }
         ]
     };
+
+    // obj stringify json string
     let jsonStr = await JsonAsync.stringify(obj1, undefined, 4)
+    let jsonStr2 = JSON.stringify(obj1, undefined, 4);
+    console.log("jsonStr === jsonStr2 is " + (jsonStr === jsonStr2));
+
+    // json string parse obj
     let res = await JsonAsync.parse(jsonStr)
-    console.log("res", JSON.stringify(res));
+    let res2 = await JSON.parse(jsonStr)
+    console.log(`obj1 JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
+
+    // template
+    let template = `{"a":"1\\r\\n\\t'\\"\\\\2\\u4F60\\u597D"}`;
+    res = await JsonAsync.parse(template);
+    res2 = JSON.parse(template)
+    console.log(`template JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
+
+    // output local file observe
+    // fs.writeFileSync("local/jsonStr.json", jsonStr, { encoding: "utf8" });
+    // fs.writeFileSync("local/jsonStr2.json", jsonStr2, { encoding: "utf8" });
 
     jsonStr = await JsonAsync.stringify([]);
     res = await JsonAsync.parse(jsonStr);

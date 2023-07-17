@@ -10,9 +10,6 @@
 
 虽然能解决一次性占用大量 CPU 时间资源的问题，但是问题将转变为解析和序列化任务的时间分散到各个不同时间上执行。客观来说完成总任务的时间会变得更长
 
-## bug
-现在 parse 有错误，不支持 \" \t 或其他 转义字符，后续会提供这个的支持。
-
 ## 安装
 请在下方的 npm 或者是 yarn 根据您的习惯选取其中一个执行即可
 
@@ -28,14 +25,16 @@ yarn add json-async-js --save
 ``` js
 
 //import for js if you use .js
+// const fs = require("fs");
 const JsonAsync = require("json-async-js");
 
 //import for typescript if you use typescript
-import JsonAsync from "json-async-js";
+// import fs from "fs";
+// import JsonAsync from "json-async-js";
 
 async function doTest() {
     let obj1 = {
-        a: "1\"2",
+        a: "1\r\n\t\'\"\\2\u4F60\u597D",
         b: 2,
         c: true,
         d: null,
@@ -78,9 +77,26 @@ async function doTest() {
             }
         ]
     };
+
+    // obj stringify json string
     let jsonStr = await JsonAsync.stringify(obj1, undefined, 4)
+    let jsonStr2 = JSON.stringify(obj1, undefined, 4);
+    console.log("jsonStr === jsonStr2 is " + (jsonStr === jsonStr2));
+
+    // json string parse obj
     let res = await JsonAsync.parse(jsonStr)
-    console.log("res", JSON.stringify(res));
+    let res2 = await JSON.parse(jsonStr)
+    console.log(`obj1 JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
+
+    // template
+    let template = `{"a":"1\\r\\n\\t'\\"\\\\2\\u4F60\\u597D"}`;
+    res = await JsonAsync.parse(template);
+    res2 = JSON.parse(template)
+    console.log(`template JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
+
+    // output local file observe
+    // fs.writeFileSync("local/jsonStr.json", jsonStr, { encoding: "utf8" });
+    // fs.writeFileSync("local/jsonStr2.json", jsonStr2, { encoding: "utf8" });
 
     jsonStr = await JsonAsync.stringify([]);
     res = await JsonAsync.parse(jsonStr);
