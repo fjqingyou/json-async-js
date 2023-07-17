@@ -10,6 +10,9 @@ The implementation idea of this library is to disperse the task of parsing and s
 
 Although it can solve the problem of occupying a large amount of CPU time resources at once, the problem will shift to the time of parsing and serialization tasks being dispersed across different times for execution. Objectively speaking, the time to complete the overall task will become longer
 
+# bug
+now parse has bug, \" \t or other escape character not support, We will provide support for this in the future
+
 ## install
 Please select one of the NPM or Yarn options below to execute according to your preference
 
@@ -25,7 +28,6 @@ yarn add json-async-js --save
 ``` js
 
 //import for js if you use .js
-const fs = require("fs");
 const JsonAsync = require("json-async-js");
 
 //import for typescript if you use typescript

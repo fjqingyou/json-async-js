@@ -69,8 +69,6 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
     }
 
     let nextSpaceInfo = createNextSpaceInfo(spaceInfo);
-    let strSpaceCurrent = getSpaceStr(spaceInfo);
-    let strSpaceNext = getSpaceStr(nextSpaceInfo);
 
     let items: any[] = [];
     if (isArray(value)) {
@@ -78,7 +76,19 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
             let strValue = await stringifyItem(item, replacer, nextSpaceInfo);
             items.push(strValue);
         }
-        return `[${strSpaceNext}${items.join("," + strSpaceNext)}${strSpaceCurrent}]`;
+
+        // empty array
+        if (items.length < 1) {
+            return "[]";
+        }
+
+        return `[${nextSpaceInfo.text}${items.join("," + nextSpaceInfo.text)}${spaceInfo.text}]`;
+    }
+
+    // object colon right space
+    let spaceOfColonRight = "";
+    if (spaceInfo.text) {
+        spaceOfColonRight = " ";
     }
 
     //object
@@ -102,19 +112,20 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
         }
 
         let strValue = await stringifyItem(v, replacer, nextSpaceInfo);
-        items.push(`\"${key}\":${strValue}`);
+        items.push(`\"${key}\":${spaceOfColonRight}${strValue}`);
     }
-    return `{${strSpaceNext}${items.join("," + strSpaceNext)}${strSpaceCurrent}}`;
+
+    // empty object
+    if (items.length < 1) {
+        return "{}";
+    }
+
+    return `{${nextSpaceInfo.text}${items.join("," + nextSpaceInfo.text)}${spaceInfo.text}}`;
 }
 
 function isArray(value: any): value is Array<any> {
     return (Array.isArray && Array.isArray(value)) || Object.prototype.toString.call(value) === '[object Array]';
 }
-
-function getSpaceStr(spaceInfo: IDataSpaceInfo): string {
-    return spaceInfo.text;
-}
-
 
 function createNextSpaceInfo(spaceInfo: IDataSpaceInfo) {
     let si = spaceInfo;
