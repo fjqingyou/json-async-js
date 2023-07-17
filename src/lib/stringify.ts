@@ -64,7 +64,8 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
 
     let toJSON = value.toJSON as (() => string) | undefined;
     if (toJSON) {
-        return toJSON.call(value);
+        let v = toJSON.call(value);
+        return stringifyItem(v, replacer, spaceInfo);
     }
 
     let nextSpaceInfo = createNextSpaceInfo(spaceInfo);
