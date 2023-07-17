@@ -33,6 +33,17 @@ const JsonAsync = require("json-async-js");
 // import JsonAsync from "json-async-js";
 
 async function doTest() {
+    let date = new Date();
+    let objWithToJSON = {
+        toJSON: function () {
+            return {
+                field1: "0",
+                field2: 1,
+                field3: date,
+            }
+        }
+    }
+
     let obj1 = {
         a: "1\r\n\t\'\"\\2\u4F60\u597D",
         b: 2,
@@ -46,7 +57,9 @@ async function doTest() {
             c: true,
             d: null,
         },
-        h: [
+        h: date,
+        i: objWithToJSON,
+        j: [
             {
                 a: "1",
                 b: 2,
@@ -59,7 +72,9 @@ async function doTest() {
                     b: 2,
                     c: true,
                     d: null,
-                }
+                },
+                h: date,
+                i: objWithToJSON,
             },
             {
                 a: "1",
@@ -73,7 +88,9 @@ async function doTest() {
                     b: 2,
                     c: true,
                     d: null,
-                }
+                },
+                h: new Date(),
+                i: objWithToJSON,
             }
         ]
     };
@@ -82,6 +99,10 @@ async function doTest() {
     let jsonStr = await JsonAsync.stringify(obj1, undefined, 4)
     let jsonStr2 = JSON.stringify(obj1, undefined, 4);
     console.log("jsonStr === jsonStr2 is " + (jsonStr === jsonStr2));
+
+    // output local file observe
+    // fs.writeFileSync("local/jsonStr.json", jsonStr, { encoding: "utf8" });
+    // fs.writeFileSync("local/jsonStr2.json", jsonStr2, { encoding: "utf8" });
 
     // json string parse obj
     let res = await JsonAsync.parse(jsonStr)
@@ -93,10 +114,6 @@ async function doTest() {
     res = await JsonAsync.parse(template);
     res2 = JSON.parse(template)
     console.log(`template JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
-
-    // output local file observe
-    // fs.writeFileSync("local/jsonStr.json", jsonStr, { encoding: "utf8" });
-    // fs.writeFileSync("local/jsonStr2.json", jsonStr2, { encoding: "utf8" });
 
     jsonStr = await JsonAsync.stringify([]);
     res = await JsonAsync.parse(jsonStr);
@@ -112,9 +129,6 @@ async function doTest() {
 
     jsonStr = await JsonAsync.stringify(undefined);
     res = await JsonAsync.parse(jsonStr);
-    console.log("res", JSON.stringify(res))
-
-    res = await JsonAsync.parse(null);
     console.log("res", JSON.stringify(res))
 }
 
