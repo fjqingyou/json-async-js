@@ -1,4 +1,10 @@
 # 异步 JSON
+[![NPM version](https://img.shields.io/npm/v/json-async-js.svg?style=flat-square)](https://npmjs.org/package/json-async-js)
+[![node version](https://img.shields.io/badge/node.js-%3E=_8-green.svg?style=flat-square)](http://nodejs.org/download/)
+[![npm download](https://img.shields.io/npm/dm/json-async-js.svg?style=flat-square)](https://npmjs.org/package/json-async-js)
+[![NPM count](https://img.shields.io/npm/dt/json-async-js.svg?style=flat-square)](https://www.npmjs.com/package/json-async-js)
+[![License](https://img.shields.io/npm/l/json-async-js.svg?style=flat-square)](https://www.npmjs.com/package/json-async-js)
+
 
 [English](./readme.md) | 简体中文
 
