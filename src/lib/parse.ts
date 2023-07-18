@@ -117,12 +117,41 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
     }
 
     async function parseString(): Promise<string> {
+        // require " character in start
+        if (text[index] !== '"') {
+            throw new Error(`SyntaxError: Unexpected character '${text[index]}' in JSON at position ${index}`)
+        }
+
         // jump '"'
         index++;
 
         let indexStart = index;
 
-        while (!(text[index] === '"' && text[index - 1] !== '\\')) {
+        for (; ;) {
+            if (text[index] === '"') {
+                // not escape character
+                if (text[index - 1] !== '\\') {
+                    break;
+                }
+
+                // calc \ character count
+                let n = 1;
+                while (n < index) {
+                    if (text[index - n - 1] !== "\\") {
+                        break;
+                    }
+
+                    n++;
+                }
+
+                //even quantity
+                if (n % 2 == 0) {
+                    break;
+                }
+            } else if (index >= text.length) {
+                throw new Error(`end of text reached without terminating '\"' of ${indexStart}`);
+            }
+
             index++;
         }
 
@@ -188,13 +217,20 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
                 return String.fromCharCode(parseInt(char.substr(1), 16));
             } else {
                 switch (char) {
-                    case 'n': return '\n';
-                    case 'r': return '\r';
-                    case 't': return '\t';
-                    case '\'': return '\'';
-                    case '\"': return '\"';
-                    case '\\': return '\\';
-                    default: return match;
+                    case 'n':
+                        return '\n';
+                    case 'r':
+                        return '\r';
+                    case 't':
+                        return '\t';
+                    case '\'':
+                        return '\'';
+                    case '\"':
+                        return '\"';
+                    case '\\':
+                        return '\\';
+                    default:
+                        return match;
                 }
             }
         });
