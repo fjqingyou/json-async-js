@@ -9,6 +9,13 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         return null;
     }
 
+    /** remedy */
+    function checkError() {
+        if (index > text.length) {
+            throw new Error(`parse fail with index gt text.length`);
+        }
+    }
+
     async function parseValue(): Promise<any> {
         let result = null;
         jumpEmpty();
@@ -28,6 +35,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
         jumpEmpty();
 
+        checkError();
+
         return result;
     }
 
@@ -40,6 +49,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         jumpEmpty();
 
         while (text[index] !== '}') {
+            checkError();
+
             jumpEmpty();
 
             const key = await parseString();
@@ -86,6 +97,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         jumpEmpty();
 
         while (text[index] !== ']') {
+            checkError();
+
             jumpEmpty();
 
             const value = await parseValue();
@@ -128,6 +141,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         let indexStart = index;
 
         for (; ;) {
+            checkError();
+
             if (text[index] === '"') {
                 // not escape character
                 if (text[index - 1] !== '\\') {
@@ -236,5 +251,27 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         });
     }
 
-    return parseValue();
+    let json: any
+    try {
+        //try async parse
+        json = await parseValue();
+    } catch (ex) {//remedy
+        // @ts-ignore temp debug callbacl
+        if (typeof window != "undefined") {
+            // @ts-ignore
+            let w = window as any;
+
+            // it's temp debug, may be deleted at any time
+            if (w && w.JsonAsyncJsParseErrorCallback) {// if exists debugger callbacl
+                w.JsonAsyncJsParseErrorCallback({
+                    err: ex,
+                    text,
+                    reviver,
+                })
+            }
+        }
+
+        json = JSON.parse(text, reviver);
+    }
+    return json;
 }
