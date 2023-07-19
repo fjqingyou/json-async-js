@@ -73,8 +73,15 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
     let items: any[] = [];
     if (isArray(value)) {
         for (const item of value) {
-            let strValue = await stringifyItem(item, replacer, nextSpaceInfo);
-            items.push(strValue);
+            let v = await stringifyItem(item, replacer, nextSpaceInfo);
+
+            // null value special treatment
+            if (v === null) {
+                items.push("null");
+                continue;
+            }
+
+            items.push(v);
         }
 
         // empty array
