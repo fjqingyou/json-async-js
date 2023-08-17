@@ -44,7 +44,7 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         const obj = {} as any;
 
         // jump '{'
-        index++;
+        jumpWith('{')
 
         jumpEmpty();
 
@@ -58,7 +58,7 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
             jumpEmpty();
 
             // jump ':'
-            index++;
+            jumpWith(':')
 
             jumpEmpty();
 
@@ -81,7 +81,7 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         }
 
         // jump '}'
-        index++;
+        jumpWith('}')
 
         jumpEmpty();
 
@@ -130,13 +130,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
     }
 
     async function parseString(): Promise<string> {
-        // require " character in start
-        if (text[index] !== '"') {
-            throw new Error(`SyntaxError: Unexpected character '${text[index]}' in JSON at position ${index}`)
-        }
-
-        // jump '"'
-        index++;
+        // jump "
+        jumpWith('"');
 
         let indexStart = index;
 
@@ -172,8 +167,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
         let indexEnd = index;
 
-        // jump '"'
-        index++;
+        // jump "
+        jumpWith('"');
 
         // crop string content
         let str = text.substring(indexStart, indexEnd);
@@ -184,13 +179,24 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
     async function parseNumber(): Promise<number> {
         let indexStart = index;
+        let nDS = 0;
         for (; ;) {
-            let code = text[index].charCodeAt(0);
+            let code = text[index++].charCodeAt(0);
             if (code < 48 || code > 57) {
+                // minus sign and start
+                if (code == 45 && indexStart == index - 1) {
+                    continue;
+                }
+
+                // decimal symbol
+                if (code == 46 && nDS == 0) {
+                    nDS++;
+                    continue
+                }
+
+                index--;
                 break;
             }
-
-            index++;
         }
         let indexEnd = index;
 
@@ -216,13 +222,18 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
 
     function jumpEmpty(): void {
         for (; ;) {
-            let c = text[index];
+            let c = text[index++];
 
             if (c !== " " && c !== "\t" && c !== "\r" && c !== "\n") {
+                index--;
                 break;
             }
+        }
+    }
 
-            index++;
+    function jumpWith(c: string) {
+        if (text[index++] !== c) {
+            throw new Error(`SyntaxError: Unexpected character '${text[index]}' in JSON at position ${index}`)
         }
     }
 
@@ -257,10 +268,8 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         json = await parseValue();
     } catch (ex) {//remedy
         // @ts-ignore temp debug callbacl
-        if (typeof window != "undefined") {
-            // @ts-ignore
-            let w = window as any;
-
+        let w = (typeof window != "undefined" && window) || (typeof global != "undefined" && global);
+        if (typeof w != "undefined") {
             // it's temp debug, may be deleted at any time
             if (w && w.JsonAsyncJsParseErrorCallback) {// if exists debugger callbacl
                 w.JsonAsyncJsParseErrorCallback({

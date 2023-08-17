@@ -77,6 +77,7 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
 
             // null value special treatment
             if (v === null) {
+                //subsequent joins need to maintain null existence
                 items.push("null");
                 continue;
             }
