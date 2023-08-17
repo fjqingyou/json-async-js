@@ -92,7 +92,7 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         const arr = [];
 
         // jump '['
-        index++;
+        jumpWith("[")
 
         jumpEmpty();
 
@@ -116,7 +116,7 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         }
 
         // jump ']'
-        index++;
+        jumpWith("]")
 
         if (reviver) {
             for (let i = 0; i < arr.length; i++) {
