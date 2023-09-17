@@ -201,6 +201,10 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
         let indexEnd = index;
 
         let str = text.substring(indexStart, indexEnd);
+        if (isBigIntStr(str)) {
+            // @ts-ignore
+            return BigInt(str);
+        }
         return Number(str);
     }
 
@@ -260,6 +264,25 @@ export async function parse<T extends any>(text: string, reviver?: (this: any, k
                 }
             }
         });
+    }
+
+    function isBigIntStr(value: string) {
+        if (value.length < 17) {
+            // length is 16
+            if (value.length == 16) {
+                let strMaxValue = "" + Number.MAX_SAFE_INTEGER;
+                for (let i = 0; i < 16; i++) {
+                    let c1 = value[i];
+                    let c2 = strMaxValue[i];
+                    if (c1 > c2) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        return true;
     }
 
     let json: any

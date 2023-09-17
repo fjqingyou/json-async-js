@@ -15,10 +15,10 @@ export async function stringify(value: any, replacer?: (number | string)[] | nul
 
 
 /** Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
- * @param value 
- * @param replacer 
- * @param space 
- * @returns 
+ * @param value
+ * @param replacer
+ * @param space
+ * @returns
  */
 export async function stringify(value: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | null, space?: string | number): Promise<string> {
     let result = "undefined";
@@ -49,17 +49,19 @@ async function stringifyItem(value: any, replacer: ((this: any, key: string, val
         return null;
     }
 
-    if (typeof value == "number") {
-        return isFinite(value) ? value : null;
-    }
-
-    if (typeof value == "boolean") {
-        return value;
-    }
-
-    if (typeof value == "string") {
-        // use JSON.stringify do string, for example \" or \' or other
-        return JSON.stringify(value);
+    let valueType = typeof value;
+    switch (valueType) {
+        case "number":
+            return isFinite(value) ? value : null;
+        case "boolean":
+            return value;
+        case "string":
+            return JSON.stringify(value);
+        case "bigint":
+            return String(value);
+        default:
+            // else return
+            break;
     }
 
     let toJSON = value.toJSON as (() => string) | undefined;

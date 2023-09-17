@@ -1,4 +1,5 @@
 # json async
+
 [![NPM version](https://img.shields.io/npm/v/json-async-js.svg?style=flat-square)](https://npmjs.org/package/json-async-js)
 [![node version](https://img.shields.io/badge/node.js-%3E=_8-green.svg?style=flat-square)](http://nodejs.org/download/)
 [![npm download](https://img.shields.io/npm/dm/json-async-js.svg?style=flat-square)](https://npmjs.org/package/json-async-js)
@@ -18,9 +19,10 @@ Although it can solve the problem of occupying a large amount of CPU time resour
 ***Note:*** is currently a test version and there is a risk of bugs. It is not recommended to use it in an production environment now.
 
 ## install
+
 Please select one of the NPM or Yarn options below to execute according to your preference
 
-```
+``` shell
 # npm
 npm install json-async-js --save
 
@@ -29,6 +31,7 @@ yarn add json-async-js --save
 ```
 
 ## test
+
 ``` js
 
 //import for js if you use .js
@@ -53,7 +56,7 @@ async function doTest() {
 
     let obj1 = {
         a: "1\r\n\t\'\"\\2\u4F60\u597D",
-        b: 2,
+        b: -2.3,
         c: true,
         d: null,
         e: [],
@@ -122,24 +125,31 @@ async function doTest() {
     res2 = JSON.parse(template)
     console.log(`template JSON.stringify(res) === JSON.stringify(res2) is ${JSON.stringify(res) === JSON.stringify(res2)}`)
 
+    // test empty array
     jsonStr = await JsonAsync.stringify([]);
     res = await JsonAsync.parse(jsonStr);
     console.log("res", JSON.stringify(res))
 
+    // test empty object
     jsonStr = await JsonAsync.stringify({});
     res = await JsonAsync.parse(jsonStr);
     console.log("res", JSON.stringify(res))
 
+    // test null
     jsonStr = await JsonAsync.stringify(null);
     res = await JsonAsync.parse(jsonStr);
     console.log("res", JSON.stringify(res))
 
+    // test undefined
     jsonStr = await JsonAsync.stringify(undefined);
     res = await JsonAsync.parse(jsonStr);
     console.log("res", JSON.stringify(res))
+
+    // bigInt support
+    res = await JsonAsync.parse('{"n_bigint":9007199254740992,"n_number":9007199254740991}');
+    jsonStr = await JsonAsync.stringify(res);
+    console.log("res", JSON.stringify(jsonStr), res);
 }
 
 doTest();
 ```
-
-
